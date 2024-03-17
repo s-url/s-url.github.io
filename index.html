@@ -11,82 +11,21 @@
         <div class="row">
             <div class=""></div>
             <div class="">
-                <h1 class="mb-5 display-3 text-center">URL 단축기</h1>
+                <h1 class="mb-5 display-5 text-center">URL 단축기</h1>
                 <div class="text-center">
-                    <input class="form-control border-2 w-25 py-3 px-4 d-inline-block border-radious" type="text" id="beforeUrl" placeholder="URL을 입력해주세요.">
+                    <input class="form-control border-2 w-50 py-3 px-4 d-inline-block border-radious" type="text" id="beforeUrl" placeholder="URL을 입력해주세요.">
                     <a type="button" id="changeButton" class="btn-secondary border border-secondary border-2 py-3 px-4 text-white rounded-2">변환</a>
                 </div>
                 <br>
-                <div class="text-center">
-                    <input class="form-control border-2 w-25 py-3 px-4 d-inline-block" type="text" id="afterUrl" readonly>
+                <div id="afterForm" class="text-center d-none">
+                    <input class="form-control border-2 w-50 py-3 px-4 d-inline-block" type="text" id="afterUrl" readonly>
                     <a type="button" id="copyButton" class="btn-primary border border-primary border-2 py-3 px-4 text-white rounded-2">복사</a>
                 </div>
             </div>
         </div>
     </div>
-    <script>
-        const changeButton = document.getElementById('changeButton');
-        const beforeUrl = document.getElementById('beforeUrl');
-        const afterUrl = document.getElementById('afterUrl');
-
-        changeButton.addEventListener('click', function() {
-            let hash = to6DigitHash(beforeUrl.value);
-            afterUrl.value = "https://s-url.github.io?s=" + hash;
-        });
-    </script>
-    <script>
-        // CRC32 테이블 생성
-        const crcTable = new Uint32Array(256);
-        for (let i = 0; i < 256; i++) {
-        let crc = i;
-        for (let j = 0; j < 8; j++) {
-            crc = (crc & 1) ? (crc >>> 1) ^ 0xEDB88320 : crc >>> 1;
-        }
-        crcTable[i] = crc;
-        }
-
-        // CRC32 계산 함수
-        function crc32(str) {
-        let crc = 0xFFFFFFFF;
-        for (let i = 0; i < str.length; i++) {
-            const char = str.charCodeAt(i);
-            crc = (crc >>> 8) ^ crcTable[(crc ^ char) & 0xFF];
-        }
-        return (crc ^ 0xFFFFFFFF) >>> 0; // unsigned
-        }
-
-        // 6자리 해시 생성 함수
-        function to6DigitHash(str) {
-        const crc = crc32(str).toString(16); // CRC32 값을 16진수 문자열로 변환
-        return crc.slice(0, 8); // 처음 6자리만 반환
-        }
-
-        // 테스트
-        // const hash = to6DigitHash("https://hairo.unikorea.go.kr/party/Bbs.do");
-        // console.log(hash); // 출력 예시: "a1b2c3"
-    </script>
-    <script>
-        // 버튼 요소 가져오기
-        const copyButton = document.getElementById('copyButton');
-
-        // 버튼에 클릭 이벤트 리스너 추가
-        copyButton.addEventListener('click', function() {
-            // 복사할 텍스트를 가져오기
-            const textToCopy = document.getElementById('afterUrl');
-
-            // 텍스트 선택
-            textToCopy.select();
-            textToCopy.setSelectionRange(0, 99999); // 모바일에서도 동작하도록 범위 설정
-
-            // 클립보드에 복사
-            document.execCommand('copy');
-
-            // 선택 해제 (선택된 텍스트를 해제하여 사용자가 복사했음을 확인할 수 있도록 함)
-            window.getSelection().removeAllRanges();
-
-            // 복사 완료 메시지
-            alert('Text copied to clipboard: ' + textToCopy.value);
-        });
-    </script>
+    <script src="js/common.js"></script>
+    <script src="js/hash.js"></script>
+    <script src="js/copy.js"></script>
 </body>
 </html>
